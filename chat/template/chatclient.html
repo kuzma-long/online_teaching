@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>聊天室{{room}} 用户{{uname}}</title>
+    <style type="text/css">
+        .talk_con{
+            width:600px;
+            height:500px;
+            border:1px solid #666;
+            margin:50px auto 0;
+            background:#f9f9f9;
+        }
+        .talk_title{
+            width:580px;
+            height:30px;
+            border:1px solid #666;
+            background:#fff;
+            text-align:center;
+            margin:10px auto 0;
+        }
+        .talk_show{
+            width:580px;
+            height:370px;
+            border:1px solid #666;
+            background:#fff;
+            margin:10px auto 0;
+            overflow:auto;
+        }
+        .talk_input{
+            width:580px;
+            margin:10px auto 0;
+        }
+        .whotalk{
+            width:80px;
+            height:30px;
+            float:left;
+            outline:none;
+        }
+        .talk_word{
+            width:560px;
+            height:26px;
+            padding:0px;
+            float:right;
+            margin-left:10px;
+            outline:none;
+            text-indent:10px;
+        }
+        .talk_sub{
+            width:56px;
+            height:30px;
+            float:right;
+            margin-left:10px;
+        }
+        .atalk{
+           margin:10px;
+        }
+        .atalk span{
+            display:inline-block;
+            background:#0181cc;
+            border-radius:10px;
+            color:#fff;
+            text-align:left;
+            padding:5px 10px;
+        }
+        .atime{
+            font-size:10px;
+            color:gray;
+        }
+        .btalk{
+            margin:10px;
+            text-align:right;
+        }
+        .btalk span{
+            display:inline-block;
+            background:#ef8201;
+            border-radius:10px;
+            color:#fff;
+            padding:5px 10px;
+        }
+        .btime{
+            font-size:10px;
+            color:gray;
+            text-align: right;
+        }
+        .centerform{
+            font-size:10px;
+            color:gray;
+            text-align: center;
+        }
+    </style>
+
+    <script src="https://cdn.staticfile.org/jquery/3.3.1/jquery.min.js"></script>
+    <script>
+        $(function () {
+            var room = $("#room").val()
+            var uname = $("#uname").val()
+            var atmember = []
+            $("#btn").click(function () {
+                sendText()
+            })
+            $("#at").click(function () {
+                var atname = $("#selector").val()
+                var str = $("#msg").val()
+                $("#msg").val(str+"@"+ atname)
+                atmember.push(atname)
+            })
+            $("#leave").click(function () {
+                window.close()
+            })
+            function requestText() {
+                host = "ws://localhost:4000/newChatStatus/?uname=" + uname + "&room=" + room
+                websocket = new WebSocket(host)
+                websocket.onmessage = function (evt) {
+                    data = $.parseJSON(evt.data)
+                    if(data.hasOwnProperty("form")){
+                        if(data['form'] == 'center'){
+                            $("#words").append("<div class='centerform'>"+ data['s'] +"</div>")
+                        }
+                        else if(data['form'] == 'left'){
+                            //"<div class='atalk'><span>"+ data['s1'] +"</span></div>"
+                            $("#words").append("<div class='atime'>"+ data['s1'] +"</div>")
+                            $("#words").append("<div class='atalk'><span>"+ data['s2'] +"</span></div>")
+                        }
+                        else {
+                            $("#words").append("<div class='btime'>"+ data['s1'] +"</div>")
+                            $("#words").append("<div class='btalk'><span>"+ data['s2'] +"</span></div>")
+                        }
+                    }
+                    else if(data.hasOwnProperty("at")){
+                        if($("#"+data['at']).length > 0){
+                        }
+                        else {
+                            $("#selector").append("<option id= " + data['at'] + " value=" + data['at'] + ">" + data['at'] + "</option>")
+                        }
+                    }
+                }
+            }
+            requestText()
+            function sendText() {
+                var temp = []
+                var text = $("#msg").val()
+                for(var i=0;i<atmember.length;i++){
+                    var atname = "@"+atmember[i]
+                    if(text.indexOf(atname)!= -1){
+                        temp.push(atmember[i])
+                    }
+                }
+                var msg = {'text':text,'atmember':temp}
+                msg = JSON.stringify(msg)
+                websocket.send(msg)
+                $("#msg").val("")
+                atmember.length = 0
+            }
+        })
+    </script>
+</head>
+<body>
+    <div class="talk_con">
+        <div class="talk_title">聊天室{{room}}</div>
+        <div class="talk_show" id="words">
+        </div>
+        <div class="talk_input">
+            <input type="text" class="talk_word" id="msg">
+            <form method="get" action="/leave">
+                <button id="leave" class="talk_sub">离开</button>
+                <input type="hidden" name ="uname" id="uname" value="{{uname}}">
+            </form>
+            <button id="btn" class="talk_sub">发送</button>
+            <button id="at" class="talk_sub">@</button>
+            <select id="selector" class="talk_sub"></select>
+            <input type="hidden" id="room" value="{{room}}">
+        </div>
+    </div>
+        <!--
+    <div>用户：<span>{{uname}}</span></div>
+    <div id="contents" style="height:500px;overflow:auto;"></div>
+
+    <div>
+        <textarea id="msg" ></textarea>
+    </div>
+    <div>
+        <select id="selector" ></select>
+        <button id="at">@</button>
+        <button id="btn">发送</button>
+        <form method="get" action="/leave">
+            <button id="leave">离开</button>
+            <input type="hidden" name ="uname" id="uname" value="{{uname}}">
+        </form>
+    </div>
+
+    <input type="hidden" id="room" value="{{room}}"> -->
+</body>
+</html>

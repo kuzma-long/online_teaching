@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>聊天室</title>
+    <script type="text/javascript" src="https://cdn.staticfile.org/jquery/1.9.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="{{static_url('css/index.css')}}">
+</head>
+
+<body>
+    <div class="logout" align="right">
+        <form action="/logout?logout=1" method="post">
+            <input class="btn btn-warning" type="submit" value="退出登录"></br>
+        </form>
+    </div>
+    <div class="col-md-4 col-md-offset-4 col-sm-6 col-sm-offset-3" >
+        <div align="center">
+            <h1>你好 ！{{ session }} <br> 欢迎来到聊天室！</h1>
+            {% for chatHome in chatHomeList %}
+                <div align="center">
+                    <a href='/home?id={{chatHome["id"]}}&name={{chatHome["name"]}}&user={{session}}' class="list-group-item"> {{chatHome["name"]}} </a>
+                </div>
+            {% end %}
+        </div>
+        </br></br>
+        <form action="/" method="post">
+            <div class="form-group">
+            <input class="form-control required" name="chatHomeName" type="text" placeholder="输入名称创建新聊天室" autofocus="autofocus">
+            <input class="btn btn-success pull-right" type="submit" value="创建"></br>
+            </div>
+        </form>
+
+        <form action="/delete?delete=1" method="post">
+            <div class="form-group">
+            <input class="form-control required" name="chatHomeName" type="text" placeholder="输入名称删除已有聊天室" autofocus="autofocus">
+            <input class="btn btn-danger pull-right" type="submit" value="删除"></br>
+            </div>
+        </form>
+    </div>
+
+</body>

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>聊天界面</title>
+    <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="{{static_url('css/home.css')}}">
+</head>
+
+<body>
+    <div class="back">
+        <form action="/" method="get">
+        <input type="submit" value="返回" class="btn btn-warning"></br>
+        </form>
+    </div>
+
+    <div class="logout">
+        <form action="/logout?logout=1" method="post">
+        <input type="submit" value="退出登录" class="btn btn-warning"></br>
+        </form>
+    </div>
+
+    <br><br><br>
+
+    <div class="panel-body" align="center">
+        <div class="chatpanel">
+            <h1>聊天室：{{ name }}</h1>
+            <input type="hidden" value="{{ id }}" id="id">
+            <input type="hidden" value="{{ name }}" id="name">
+            <input type="hidden" value="{{ user }}" id="user">
+
+            <div id="chatinfo">
+                <!-- 恢复聊天内容 -->
+                {% for msg in msgs %}
+                    {% if msg['from'] == user %}
+                        <div class="usr"><b>{{msg['time']}}</b><div id="usrfrom">{{msg['from']}}</div><div id="usrmsg">{{msg['message']}}</div></div>
+                    {% elif msg['from'] == 'system' %}
+                        <div class="systime"><b>{{msg['time']}}</b></div>
+                        <p class="sysmsg">{{msg['message']}}</p>
+                    {% else %}
+                        <div class="other"><b>{{msg['time']}}</b><div id="otherfrom">{{msg['from']}}</div><div id="othermsg">{{msg['message']}}</div></div>
+                    {% end %}
+                {% end %}
+                {% if msgs!=[] %}
+                    <div class="history">------------以上是历史消息------------</div>
+                {% end %}
+            </div>
+
+            <div class="send">
+                <div class="input-group">
+                      <input type="text" class="form-control" name="chat_text" id="chat_text" placeholder="Say something">
+                      <span class="input-group-btn">
+                        <button id="btn" type="button" class="btn blue b-a no-shadow" onclick="send()">发送</button>
+                      </span>
+                </div>
+            </div>
+
+            <div id="userlist">
+                请选择要@的人</br>
+                <select id="atusers" multiple="multiple">
+                    {% for usr in users %}
+                        <option id={{usr}}>{{usr}}</option>
+                    {% end %}
+                </select>
+            </div>
+
+        </div>
+    </div>
+    <script src="{{static_url('js/home.js')}}"></script>
+
+</body>
+</html>

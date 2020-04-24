@@ -1,0 +1,52 @@
+body{text-align:center}
+.wrap {
+    width: 300px;
+    padding: 20px;
+    background:linear-gradient(#bbd3ff, #dad8ff);
+    position: absolute;
+    top: 30%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    overflow: hidden;
+    border-radius:15px ;
+}
+.title{
+    width: 100%;
+    font-size: 20px;
+    text-align: center;
+}
+.create{
+    width: 100%;
+}
+.create-text{
+    width: 70%;
+    float: left;
+}
+.create-btn{
+    width: 29%;
+    float: left;
+}
+div.css_table {
+    width: 100%;
+    margin:0 auto;
+  }
+div.css_table>div{
+    width:100%;
+    margin-left: 5%;
+}
+div.css_table>div>div {
+    border:1px solid;
+    display:inline-block;
+    width: 30%;
+    height: 25px;
+    float: left;
+    text-align: center;
+    color:black;
+    margin:0 auto;
+  }
+.btn{
+    border-radius:15px ;
+    height: 20px;
+}
+
+

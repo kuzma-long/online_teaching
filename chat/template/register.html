@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>聊天室注册</title>
+    <link rel="stylesheet" href="{{static_url('css/register.css')}}" type="text/css">
+    <!--link rel="stylesheet" href="log.css" type="text/css"-->
+    <script src="https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js"></script>
+    <script>
+        $(function () {
+            $("form").submit(function (event) {
+                var pwd1 = $("#pwd1").val();
+                var pwd2 = $("#pwd2").val();
+                if(pwd1 != pwd2){
+                    event.preventDefault();
+                    alert("密码确认不一致");
+                }
+            })
+        })
+    </script>
+</head>
+<body>
+<div class="wrap">
+    <h1>注册</h1>
+    <form action="/register" method="post">
+        <input class="sign-text" type="text" name="uname" placeholder="用户名">
+        <input class="sign-text" type="password" name="pwd1" id="pwd1" placeholder="密码">
+        <input class="sign-text" type="password" name="pwd2" id="pwd2" placeholder="确认密码">
+        <span>
+            {% if flag %}
+                用户已存在，请重新输入。
+            {% end %}
+        </span>
+        <input class="sign-btn" type="submit" value="提交"></input>
+    </form>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>聊天室</title>
+    <link rel="stylesheet" href="{{static_url("css/home.css")}}" type="text/css">
+    <!--link rel="stylesheet" href="log.css" type="text/css"-->
+    <script src="https://cdn.staticfile.org/jquery/3.3.1/jquery.min.js"></script>
+    <script>
+        $(function () {
+            var rooms_and_creater = $("#rooms_and_creater").val()
+            var uname = $("#uname").val()
+            var rooms_and_creater = $.parseJSON(rooms_and_creater)
+            for(var room in rooms_and_creater){
+                var div = "<div id=div-" + room +" class='css_tr'>" +
+                                "<div class='css_td'>" +room+"</div>" +
+                                "<div class='css_td'><button id=add-" + room + ">加入</button></div>"+
+                                "<div class='css_td'><button id=del-" + room + ">删除</button></div>" +
+                                "</div>"
+                $("#css_table").append(div)
+                addBtnEvent("add-"+room,uname,room)
+                addBtnevent2("del-"+room,room)
+            }
+            $("#btn1").click(function () {
+                sendText1()
+            })
+            $("#exit").click(function () {
+                window.close()
+            })
+            function requestText() {
+                host = "ws://localhost:4000/newRoomStatus/?uname=" + uname
+                websocket = new WebSocket(host)
+                websocket.onmessage = function (evt) {
+                    data = $.parseJSON(evt.data)
+                    var room = data['room']
+                    if(data['operate'] == 'create') {
+                        if(data['val'] == 1){
+                            var div = "<div id=div-" + room +" class='css_tr'>" +
+                                "<div class='css_td'>聊天室" +room+"</div>" +
+                                "<div class='css_td'><button id=add-" + room + ">加入</button></div>"+
+                                "<div class='css_td'><button id=del-" + room + ">删除</button></div>" +
+                                "</div>"
+                            $("#css_table").append(div)
+                            addBtnEvent("add-"+room,uname,room)
+                            addBtnevent2("del-"+room,room)
+                        }
+                        else {
+                            alert("该聊天室已存在！")
+                        }
+                        //$("#rooms").append('<a id=' + room + ' href=/home/?room='+ room + "&uname=" + uname +">" + room + "</a>&nbsp;&nbsp;&nbsp;");
+                    }
+                    else if(data['operate'] == 'delete'){
+                        if(data['val'] == "1"){
+                            $("#div-"+room).remove()
+                        }
+                        else {
+                            alert("您没有权利删除聊天室！")
+                        }
+
+                    }
+                }
+            }
+            function addBtnEvent(id,uname,room){
+                $("#"+id).bind("click",function () {
+                    $(window).attr('location',"/home/?room="+ room + "&uname=" + uname)
+                })
+            }
+            function addBtnevent2(id,room){
+                $("#"+id).bind("click",function () {
+                    var mes = {"room":room, "operate":"delete"}
+                    mes = JSON.stringify(mes)
+                    websocket.send(mes)
+                })
+            }
+            requestText()
+            function sendText1() {
+                var mes = {"room":$("#newroom").val(),"operate":"create"}
+                mes = JSON.stringify(mes)
+                websocket.send(mes)
+                $('#newroom').val("")
+            }
+        })
+    </script>
+</head>
+<body>
+<div class="wrap">
+    <div class="title">欢迎:{{uname}}</div><br>
+    <div class="create">
+        <div class="create-text">
+            <input type="text" id="newroom">
+        </div>
+
+        <div class="create-btn">
+             <button id="btn1">创建</button><br>
+        </div>
+
+    </div>
+    <p></p><br>
+    <div>请选择一个聊天室加入</div>
+    <div id="css_table" class="css_table"></div>
+    <p></p><br>
+    <input type="hidden" value="{{rooms_and_creater}}" id="rooms_and_creater">
+    <form method="post" action="/exit">
+        <input type="hidden" value="{{uname}}" id="uname" name="uname">
+        <button id="exit">退出</button>
+    </form>
+
+
+</div>
+
+
+
+</body>
+</html>

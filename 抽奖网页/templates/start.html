@@ -1,0 +1,30 @@
+<html>
+<head>
+     <meta charset="utf-8">
+     <title>抽奖结果</title>
+</head>
+<body>
+    <ul class="剩余情况">
+        <h1><font style="color:black">开奖现场</font></h1>
+        <h4><font style="color:black">剩余奖项人数</font></h4>
+        <div class="一等奖">一等奖剩余: <span>{{award["1"]}}</span></div>
+        <div class="二等奖">二等奖剩余: <span>{{award["2"]}}</span></div>
+        <div class="三等奖">三等奖剩余: <span>{{award["3"]}}</span></div>
+    </ul>
+     <ul class="抽奖">
+        <form name="input" method="post">
+            <h4><font style="color:black">当前开奖人数</font></h4>
+           一等奖开奖人数: <input type = "number" name="onenumber"><br>
+           二等奖开奖人数: <input type = "number" name="twonumber"><br>
+           三等奖开奖人数: <input type = "number" name="threenumber"><br>
+            <input type="submit" value="开奖">
+         </form>
+    </ul>
+    <ul class="结果">
+        <h4><font style="color:black">目前开奖结果</font></h4>
+        <div class="一">一等奖目前开奖结果: <span>{%for f in fname%}{{f}} {% end %}</span></div>
+        <div class="二">二等奖目前开奖结果: <span>{%for s in sname%}{{s}} {% end %}</span></div>
+        <div class="三">三等奖目前开奖结果: <span>{%for t in tname%}{{t}} {% end %}</span></div>
+    </ul>
+</body>
+</html>

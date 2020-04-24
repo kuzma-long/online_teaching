@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>聊天室登录</title>
+    <link rel="stylesheet" href="{{static_url('css/log.css')}}" type="text/css">
+    <!--link rel="stylesheet" href="log.css" type="text/css"-->
+</head>
+<body>
+<div class="wrap" id="wrap">
+    <h1>登录</h1>
+    <form action="/log" method="post">
+        <input class="sign-text" type="text" name="uname" placeholder="用户名">
+        <input class="sign-text" type="password" name="pwd" placeholder="密码">
+        <span >
+            {% if flag %}
+                {{flag}}
+            {% end %}
+        </span>
+        <input class="sign-btn" type="submit" value="登录"></input>
+        <a href="/register">注册</a>
+    </form>
+    </div>
+</div>
+</body>
+</html>
+
