@@ -186,6 +186,9 @@ class newClient(tornado.websocket.WebSocketHandler):
     def on_message(self, message):
         self.application.chathome.send_msg(self, message)  # 处理客户端提交的最新消息
 
+    def check_origin(self, origin):  # 允许所有跨域通讯，解决403问题
+        return True
+
 
 class Application(tornado.web.Application):
     def __init__(self):
